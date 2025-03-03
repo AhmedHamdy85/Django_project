@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+            <div class="text-center">
+                <h2 class="mb-4 text-primary">My Profile</h2>
+            </div>
+            <div class="row g-4 align-items-center">
+                <div class="col-md-4 text-center">
+                    {% if user.image %}
+                        <img src="{{ user.image.url }}" alt="Profile Picture" class="img-fluid rounded-circle" width="200">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200" alt="Profile Picture" class="img-fluid rounded-circle">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr><th class="text-primary">First Name</th><td>{{ user.first_name }}</td></tr>
+                            <tr><th class="text-primary">Last Name</th><td>{{ user.last_name }}</td></tr>
+                            <tr><th class="text-primary">Email</th><td><a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a></td></tr>
+                            <tr><th class="text-primary">Phone</th><td>{{ user.phone }}</td></tr>
+                            <tr><th class="text-primary">Birthday</th><td>{{ user.birthday }}</td></tr>
+                            <tr><th class="text-primary">Facebook</th><td>{% if user.facebook %}<a href="{{ user.facebook }}" target="_blank" class="btn btn-outline-primary btn-sm">Visit Profile</a>{% else %}<span class="text-muted">Not Provided</span>{% endif %}</td></tr>
+                            <tr><th class="text-primary">Country</th><td>{% if user.country %}{{ user.country }}{% else %}<span class="text-muted">Not Provided</span>{% endif %}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'update_profile' user.id %}" class="btn btn-primary">Update Your Info</a>
+                <a href="/" class="btn btn-outline-secondary">Back to Home</a>
+                <a href="/" class="btn btn-info">View My Donations</a>
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="card shadow-lg p-4 mt-4">
+            <h3 class="text-primary text-center">Your Projects</h3>
+            {% if projects %}
+                <ul class="list-group list-group-flush">
+                    {% for project in projects %}
+                        <li class="list-group-item">{{ project.title }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted text-center mt-3">No projects added yet.</p>
+            {% endif %}
+            
+            <!-- Buttons -->
+            <div class="text-center mt-3">
+                <a href="/" class="btn btn-success">View All Projects</a>
+                <a href="/" class="btn btn-primary">Add Project</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
