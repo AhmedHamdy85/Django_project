@@ -7,9 +7,17 @@
       <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="max-width: 720px; width: 100%;">
         <div class="row g-0">
           <!-- Project Image -->
+          {% if project.image %}
           <div class="col-md-4">
             <img src="{{ project.image.url }}" class="img-fluid rounded-start h-100" alt="{{ project.title }}">
           </div>
+      {% else %}
+      <div class="col-md-4">
+        <img src="{% static 'images/git.jpg' %}" 
+        class="img-fluid rounded-start h-100" alt="Default Image">      </div>
+      {% endif %}
+          
+          {% comment %} <img src="{{ project.image.url }}" class="img-fluid rounded-start h-100" alt="{{ project.title }}"> {% endcomment %}
     
           <!-- Project Details -->
           <div class="col-md-8">
@@ -28,23 +36,47 @@
     
               <!-- Comment Section -->
               <div>
-                <form method="POST">
+                <form method="POST" action="{% url 'add_comment' project.id %}">
                   {% csrf_token %}
                   <div class="mb-2">
                     <input type="text" class="form-control" name="comment" placeholder="Write a comment..." required>
                   </div>
                   <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-secondary w-100">Add Comment</button>
+
                   </div>
                 </form>
               </div>
+
     
             </div>
           </div>
         </div>
       </div>
     </div>
-    
+    <div class="container mt-3 mb-5" >
+      <h3 class="fw-bold text-primary">Comments</h3>
+      
+      <div class="card shadow-sm border-0 rounded-4 p-3 bg-light">
+          {% if comments %}
+              {% for comment in comments %}
+                  <div class="d-flex align-items-start gap-3 mb-3 p-3 border-bottom">
+                      <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
+                           style="width: 40px; height: 40px; font-size: 18px;">
+                          {{ comment.user.firist_name|slice:":1"|upper }}  <!-- First letter of username -->
+                      </div>
+                      <div>
+                          <strong class="text-dark">{{ comment.user.firist_name }}</strong> 
+                          <small class="text-muted"> - {{ comment.time|date:"F d, Y H:i" }}</small>
+                          <p class="mb-1 text-dark">{{ comment.text }}</p>
+                      </div>
+                  </div>
+              {% endfor %}
+          {% else %}
+              <p class="text-muted">No comments yet. Be the first to comment!</p>
+          {% endif %}
+      </div>
+  </div >
     
     
        {% endblock body %}
