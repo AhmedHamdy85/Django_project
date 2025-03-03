@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from homepage.models import User
+from homepage.models import Donation, User,Project
 # Create your views here.
 
 def user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    return render(request, 'user_profile/profile.html', {'user': user})
+    projects = Project.objects.filter(user=user)
+    donations = Donation.objects.filter(user=user)  
+    return render(request, 'user_profile/profile.html', {'user': user, 'projects': projects,'donations': donations})
 
 def update_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -24,3 +26,13 @@ def update_profile(request, user_id):
         return redirect('user_profile', user_id=user.id)
 
     return render(request, 'user_profile/update_profile.html', {'user': user})
+
+
+def delete_profile(request, user_id): 
+    user = get_object_or_404(User, id=user_id)
+
+    if request.method == "POST":
+        user.delete()
+        return redirect('home')  
+
+    return redirect('user_profile', user_id=user_id)  
