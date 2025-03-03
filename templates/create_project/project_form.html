@@ -1,0 +1,15 @@
+{% extends "homepage/base.html" %}
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2 class="text-center">Create a project</h2>
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Create</button>
+            </form>
+        </div>
+    </div>
+{% endblock body %}
