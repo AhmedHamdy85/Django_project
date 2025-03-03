@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class User (models.Model):
     firist_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
@@ -21,12 +22,12 @@ class Project (models.Model):
     titele = models.CharField(max_length=100)
     description = models.TextField()
     image = models.FileField(upload_to='static/images/')
-    Category=models.ForeignKey('Category', on_delete=models.CASCADE)
-    totalTarget= models.IntegerField()
-    startTime= models.DateTimeField( auto_now_add=True )
-    endTime= models.DateTimeField()
+    Category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    totalTarget = models.IntegerField()
+    startTime = models.DateTimeField(auto_now_add=True)
+    endTime = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    
+
     def __str__(self):
         return self.titele
 
@@ -36,11 +37,13 @@ class Donation (models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.amount
-    
+
+
 class Category (models.Model):
     name = models.CharField(max_length=100)
+
     def __str__(self):
         return self.name
-    

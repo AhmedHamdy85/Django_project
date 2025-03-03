@@ -1,32 +1,61 @@
+{% extends "homepage/base.html" %}
+
+    {% block title %}
+        <title>Welcome to My Django Project</title>
+    {% endblock title %}
+
+    {% block style %}
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #f0f0f0;
+            }
+            h1 {
+                text-align: center;
+                margin-top: 50px;
+            }
+            p {
+                text-align: center;
+                margin-top: 20px;
+            }
+        </style>
+    {% endblock style %}
 
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to My Django Project</title>
+    {% block body %}
+        <div class="container">
+            <h1>Comparing the Top Online Fundraising and <span class="text-success">Crowdfunding</span> Platforms</h1>
+            <p class="text-muted fs-4">
+
+                Crowdfunding is a way to raise money for an individual or organization by collecting donations through family, friends, friends of friends, strangers, businesses, and more. By using social media, people can reach more potential donors than traditional forms of fundraising.
+                
+                Before you start crowdfunding, find the best platform for your needs. GoFundMe has compiled this list to help you compare the best online fundraising platform by fees, features, support, and more.
+            </p>
+
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+
+                {% comment %} {% for  in  %} {% endcomment %}
+                <div class="col">
+                  <div class="card">
+                    <img src="..." class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">{{titele}}</h5>
+                      <p class="card-text">{{description}}</p>
+                      <span>{{totalTarget}}</span>
+                      <button class="btn btn-success">Donate</button>
+                    </div>
+                  </div>
+                </div>
+                {% comment %} {% endfor %} {% endcomment %}
+                
+              </div>
+        </div>
+
+
+            
+        
+    {% endblock body %}
     
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        h1 {
-            text-align: center;
-            margin-top: 50px;
-        }
-        p {
-            text-align: center;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Welcome to My Django Project</h1>
-    <p>This is the homepage of your new Django project.</p>
-</body>
-</html>
