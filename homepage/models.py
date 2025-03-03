@@ -21,7 +21,7 @@ class User (models.Model):
 class Project (models.Model):
     titele = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.FileField(upload_to='static/images/')
+    image = models.FileField(upload_to='static/images/', null=True, blank=True)
     Category = models.ForeignKey('Category', on_delete=models.CASCADE)
     totalTarget = models.IntegerField()
     startTime = models.DateTimeField(auto_now_add=True)
