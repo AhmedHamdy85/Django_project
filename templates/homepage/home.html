@@ -1,5 +1,5 @@
 {% extends "homepage/base.html" %}
-
+{% load static %}
     {% block title %}
         <title>Welcome to My Django Project</title>
     {% endblock title %}
@@ -35,21 +35,27 @@
                 Before you start crowdfunding, find the best platform for your needs. GoFundMe has compiled this list to help you compare the best online fundraising platform by fees, features, support, and more.
             </p>
 
-            <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="row row-cols-1 row-cols-md-3 g-4 mt-5 mb-5">
 
-                {% comment %} {% for  in  %} {% endcomment %}
+                {% for project in projects %}
                 <div class="col">
-                  <div class="card">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">{{titele}}</h5>
-                      <p class="card-text">{{description}}</p>
-                      <span>{{totalTarget}}</span>
-                      <button class="btn btn-success">Donate</button>
+                    <div class="card">
+                      <img src="{{ project.image.url }}" class="card-img-top" alt="...">
+                      <div class="card-body">
+                        <h5 class="card-title fw-bold text-primary">{{ project.title }}</h5>
+                        <p class="card-text text-muted">{{ project.Category }}</p>
+                        <div class="d-flex justify-content-between align-items-center my-2">
+                            <span class="badge bg-success p-2">{{ project.totalTarget }}</span>
+                            <span class="badge bg-danger p-2">{{ project.endTime }}</span>
+                          </div>
+                          <a href=' {% url "project_detail" project.id %} ' class="btn btn-success w-100 mt-2" >View Details</a>
+                        </div>
                     </div>
-                  </div>
-                </div>
-                {% comment %} {% endfor %} {% endcomment %}
+                  </div> 
+                  
+                  
+                  
+                {% endfor %}
                 
               </div>
         </div>
