@@ -5,14 +5,10 @@ from .models import Project
 
 
 def home(request):
-    context = {
-        "titele": "home",
-        "description": 25,
-        "Salary": 2000
-    }
-    return render(request, 'homepage/home.html', context)
+    projects = Project.objects.all()
+    return render(request, 'homepage/home.html', {'projects': projects})
 
 
 def project_detail(request, project_id):
-    # project=Project.objects.get(id=project_id)
-    return render(request, 'homepage/project_detail.html', {'project_id': project_id})
+    project=Project.objects.get(id=project_id)
+    return render(request, 'homepage/project_detail.html', {'project': project})
