@@ -32,17 +32,17 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="{% url "home" %}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="{% url "create_project" %}">About</a>
               </li>
             </ul>
             {% comment %} <form class="d-flex" role="search">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form> {% endcomment %}
-            <button class="btn btn-success">Start a fundraiser</button>
+            <a class="btn btn-success" href='{% url "create_project" %}'>Start a fundraiser</a>
           </div>
         </div>
     </nav>
