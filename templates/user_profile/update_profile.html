@@ -48,17 +48,17 @@
 
                         <div class="mb-3">
                             <label for="birthday" class="form-label">Birthday</label>
-                            <input type="date" id="birthday" name="birthday" class="form-control" value="{{ user.birthday|date:'Y-m-d' }}">
+                            <input type="date" id="birthday" name="birthday" class="form-control"  value="{{ user.birthday|default_if_none:''|date:'Y-m-d' }}">
                         </div>
 
                         <div class="mb-3">
                             <label for="facebook" class="form-label">Facebook Profile</label>
-                            <input type="url" id="facebook" name="facebook" class="form-control" value="{{ user.facebook }}">
+                            <input type="url" id="facebook" name="facebook" class="form-control" value="{{ user.facebook|default_if_none:'' }}">
                         </div>
 
                         <div class="mb-3">
                             <label for="country" class="form-label">Country</label>
-                            <input type="text" id="country" name="country" class="form-control" value="{{ user.contury }}">
+                            <input type="text" id="country" name="country" class="form-control" value="{{ user.contury|default_if_none:'' }}">
                         </div>
 
                         <div class="mb-3">
