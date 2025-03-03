@@ -23,13 +23,21 @@
                 <div class="col-md-8">
                     <table class="table table-hover">
                         <tbody>
-                            <tr><th class="text-primary">First Name</th><td>{{ user.first_name }}</td></tr>
+                            <tr><th class="text-primary">First Name</th><td>{{ user.firist_name }}</td></tr>
                             <tr><th class="text-primary">Last Name</th><td>{{ user.last_name }}</td></tr>
                             <tr><th class="text-primary">Email</th><td><a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a></td></tr>
                             <tr><th class="text-primary">Phone</th><td>{{ user.phone }}</td></tr>
                             <tr><th class="text-primary">Birthday</th><td>{{ user.birthday }}</td></tr>
-                            <tr><th class="text-primary">Facebook</th><td>{% if user.facebook %}<a href="{{ user.facebook }}" target="_blank" class="btn btn-outline-primary btn-sm">Visit Profile</a>{% else %}<span class="text-muted">Not Provided</span>{% endif %}</td></tr>
-                            <tr><th class="text-primary">Country</th><td>{% if user.country %}{{ user.country }}{% else %}<span class="text-muted">Not Provided</span>{% endif %}</td></tr>
+                            <tr><th class="text-primary">Facebook</th>
+                                <td>
+                                    {% if user.facebook %}
+                                        <a href="{{ user.facebook }}" target="_blank" class="btn btn-outline-primary btn-sm">Visit Profile</a>
+                                    {% else %}
+                                        <span class="text-muted">Not Provided</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr><th class="text-primary">Country</th><td>{% if user.contury %}{{ user.contury }}{% else %}<span class="text-muted">Not Provided</span>{% endif %}</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -37,29 +45,77 @@
             <div class="text-center mt-4">
                 <a href="{% url 'update_profile' user.id %}" class="btn btn-primary">Update Your Info</a>
                 <a href="/" class="btn btn-outline-secondary">Back to Home</a>
-                <a href="/" class="btn btn-info">View My Donations</a>
             </div>
         </div>
 
-        <!-- Projects Section -->
-        <div class="card shadow-lg p-4 mt-4">
-            <h3 class="text-primary text-center">Your Projects</h3>
-            {% if projects %}
-                <ul class="list-group list-group-flush">
-                    {% for project in projects %}
-                        <li class="list-group-item">{{ project.title }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="text-muted text-center mt-3">No projects added yet.</p>
-            {% endif %}
-            
-            <!-- Buttons -->
-            <div class="text-center mt-3">
-                <a href="/" class="btn btn-success">View All Projects</a>
-                <a href="/" class="btn btn-primary">Add Project</a>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card shadow-lg p-4">
+                    <h3 class="text-primary text-center">Your Projects</h3>
+                    {% if projects %}
+                        <ul class="list-group list-group-flush">
+                            {% for project in projects %}
+                                <li class="list-group-item">{{ project.titele }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted text-center mt-3">No projects added yet.</p>
+                    {% endif %}
+                    
+                    <div class="text-center mt-3">
+                        <a href="/" class="btn btn-success">View All Projects</a>
+                        <a href="/" class="btn btn-primary">Add Project</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-lg p-4">
+                    <h3 class="text-primary text-center">Your Donations</h3>
+                    {% if donations %}
+                        <ul class="list-group list-group-flush">
+                            {% for donation in donations %}
+                                <li class="list-group-item">
+                                    Donated <strong>${{ donation.amount }}</strong> to 
+                                    <em>{{ donation.project.titele }}</em>
+                                    on {{ donation.time|date:"M d, Y" }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted text-center mt-3">No donations made yet.</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
+
+        <!-- Delete Account Button -->
+        <div class="text-center mt-4">
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete My Account</button>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger" id="deleteModalLabel">Confirm Account Deletion</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete your account? This action <strong>cannot</strong> be undone.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form action="{% url 'delete_profile' user.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Yes, Delete My Account</button>
+                        </form>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
