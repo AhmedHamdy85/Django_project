@@ -15,5 +15,3 @@ class ProjectForm(ModelForm):
             'user': forms.Select(attrs={'class': 'form-control'}),
             'endTime': forms.DateInput(attrs={'type': 'date'}),
         }
-
-        
