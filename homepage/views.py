@@ -25,8 +25,6 @@ def home(request):
         'categories': categories,
         'selected_category': category_filter,
     })
-    projects = projects.order_by('-id')
-    return render(request, 'homepage/home.html', {'projects': projects})
 
 
 def project_detail(request, project_id):
