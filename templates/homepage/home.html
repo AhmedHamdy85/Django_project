@@ -20,6 +20,22 @@
                 text-align: center;
                 margin-top: 20px;
             }
+            .fixed-img {
+                height: 100%; /* Set a fixed height for all images */
+             /* Ensures images fit within the fixed height without distortion */
+                width: 100%; /* Ensures images take full width of the card */
+            }
+            .input-group {
+                margin: 20px auto;
+                max-width: 600px;
+            }
+            .form-control {
+                border-radius: 0;
+            }
+            .btn-primary {
+                border-radius: 0;
+            }
+            
         </style>
     {% endblock style %}
 
@@ -34,27 +50,68 @@
                 
                 Before you start crowdfunding, find the best platform for your needs. GoFundMe has compiled this list to help you compare the best online fundraising platform by fees, features, support, and more.
             </p>
+            
+            {% comment %} Search {% endcomment %}
+            <form method="get" action="{% url 'home' %}" class="mb-4">
+                <div class="row">
+                    
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search Projects..." value="{{ query }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
 
+                    <!-- Category Seerach -->
+                    <div class="col-md-3">
+                        <select name="category" class="form-select">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" 
+                                    {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                </div>
+            </form>
+            {% comment %} Search {% endcomment %}
+
+            
             <div class="row row-cols-1 row-cols-md-3 g-4 mt-5 mb-5">
-
+                
                 {% for project in projects %}
                 <div class="col">
-                    <div class="card">
-                      <img src="{{ project.image.url }}" class="card-img-top" alt="...">
-                      <div class="card-body">
-                        <h5 class="card-title fw-bold text-primary">{{ project.title }}</h5>
-                        <p class="card-text text-muted">{{ project.Category }}</p>
-                        <div class="d-flex justify-content-between align-items-center my-2">
-                            <span class="badge bg-success p-2">{{ project.totalTarget }}</span>
-                            <span class="badge bg-danger p-2">{{ project.endTime }}</span>
-                          </div>
-                          <a href=' {% url "project_detail" project.id %} ' class="btn btn-success w-100 mt-2" >View Details</a>
+                    <div class="card h-100 d-flex flex-column">
+                        <!-- Image with Fixed Height -->
+                        <div class="overflow-hidden">
+                            {% if project.image %}
+                                <img src="{{ project.image.url }}" class="card-img-top img-fluid fixed-img" alt="{{ project.title }}">
+                            {% else %}
+                                <img src="{% static 'images/git.jpg' %}" 
+                                     class="card-img-top img-fluid fixed-img" alt="Default Image">
+                            {% endif %}
+                        </div>
+                
+                        <!-- Card Body -->
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <div class="d-flex justify-content-between align-items-center my-2">
+
+                                <h5 class="card-title fw-bold text-primary">{{ project.titele }}</h5>
+                                <h5 class="card-text text-muted">{{ project.Category }}</h5>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center my-2">
+                                <span class="badge bg-success p-2">Target {{ project.totalTarget }} $</span>
+                                <span class="badge bg-danger p-2">{{ project.endTime }}</span>
+                            </div>
+                            <a href="{% url 'project_detail' project.id %}" class="btn btn-success w-100 mt-2">View Details</a>
                         </div>
                     </div>
-                  </div> 
-                  
-                  
-                  
+                </div>
+                
                 {% endfor %}
                 
               </div>

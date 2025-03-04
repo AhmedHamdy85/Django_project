@@ -30,16 +30,19 @@ class Project (models.Model):
 
     def __str__(self):
         return self.titele
+    
+    def total_donations(self):
+        return self.donations.aggregate(models.Sum('amount'))['amount__sum'] or 0
 
 
 class Donation (models.Model):
-    amount = models.IntegerField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2) 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, related_name='donations', on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.amount
+     return f"{self.user.firist_name} donated {self.amount}" 
 
 
 class Category (models.Model):
@@ -47,3 +50,13 @@ class Category (models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Comment (models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    text = models.TextField()
+    time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.text
