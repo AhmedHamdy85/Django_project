@@ -25,6 +25,16 @@
              /* Ensures images fit within the fixed height without distortion */
                 width: 100%; /* Ensures images take full width of the card */
             }
+            .input-group {
+                margin: 20px auto;
+                max-width: 600px;
+            }
+            .form-control {
+                border-radius: 0;
+            }
+            .btn-primary {
+                border-radius: 0;
+            }
             
         </style>
     {% endblock style %}
@@ -40,9 +50,39 @@
                 
                 Before you start crowdfunding, find the best platform for your needs. GoFundMe has compiled this list to help you compare the best online fundraising platform by fees, features, support, and more.
             </p>
+            
+            {% comment %} Search {% endcomment %}
+            <form method="get" action="{% url 'home' %}" class="mb-4">
+                <div class="row">
+                    
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search Projects..." value="{{ query }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
 
+                    <!-- Category Seerach -->
+                    <div class="col-md-3">
+                        <select name="category" class="form-select">
+                            <option value="">All Categories</option>
+                            {% for category in categories %}
+                                <option value="{{ category.id }}" 
+                                    {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                </div>
+            </form>
+            {% comment %} Search {% endcomment %}
+
+            
             <div class="row row-cols-1 row-cols-md-3 g-4 mt-5 mb-5">
-
+                
                 {% for project in projects %}
                 <div class="col">
                     <div class="card h-100 d-flex flex-column">
@@ -72,9 +112,6 @@
                     </div>
                 </div>
                 
-                  
-                  
-                  
                 {% endfor %}
                 
               </div>
