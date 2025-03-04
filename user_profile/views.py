@@ -40,3 +40,9 @@ def delete_profile(request, user_id):
 def project_detail(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     return render(request, 'user_profile/project_detail.html', {'project': project})
+
+def delete_project(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    if request.method == "POST":
+        project.delete()
+        return redirect('home')
