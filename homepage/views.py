@@ -1,5 +1,7 @@
+from django.utils import timezone  # ✅ Correct import for timezone
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Project, Comment,User
+from django.urls import reverse
+from .models import Project, Comment,User,Donation
 
 # Create your views here.
 
@@ -11,9 +13,26 @@ def home(request):
 
 def project_detail(request, project_id):
     project=Project.objects.get(id=project_id)
-    comments = Comment.objects.filter(project=project).order_by('-id')  # Latest comments first
+    comments = Comment.objects.filter(project=project).order_by('-id')  
+    donathions = Donation.objects.filter(project=project).order_by('-id') 
+    total_donations = project.total_donations() or 0
+    status = "Not Achieved yet"
 
-    return render(request, 'homepage/project_detail.html', {'project': project, 'comments': comments})
+    if project.endTime < timezone.now():
+        status = "Expired"
+    elif total_donations >= project.totalTarget:
+        status = "Goal Achieved"
+    else:
+        status = "Not Achieved yet"
+            
+
+    return render(request, 'homepage/project_detail.html', {
+        'project': project,
+          'comments': comments,
+            'donathions': donathions,
+            'total_donations': total_donations,
+            'status': status,
+          })
 
 def add_comment(request, project_id):
     project = get_object_or_404(Project, id=project_id)
@@ -24,7 +43,20 @@ def add_comment(request, project_id):
             Comment.objects.create(user_id=request.user.id, project=project, text=text)
             
 
-    comments = Comment.objects.filter(project=project).order_by('-id')  # Latest comments first
 
 
-    return render(request, 'homepage/project_detail.html', {'project': project, 'comments': comments})
+    return redirect(reverse('project_detail', args=[project_id]))
+
+
+
+
+
+def add_donation(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+
+    if request.method == 'POST':
+        amount = request.POST.get("amount", "").strip()
+        if amount.isdigit():  
+            Donation.objects.create(user_id=request.user.id, project=project, amount=int(amount))
+
+    return redirect(reverse('project_detail', args=[project_id]))
