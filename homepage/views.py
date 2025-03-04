@@ -8,6 +8,7 @@ from .models import Project, Comment,User,Donation
 
 def home(request):
     projects = Project.objects.all()
+    projects= projects.order_by('-id')
     return render(request, 'homepage/home.html', {'projects': projects})
 
 
@@ -17,6 +18,7 @@ def project_detail(request, project_id):
     donathions = Donation.objects.filter(project=project).order_by('-id') 
     total_donations = project.total_donations() or 0
     status = "Not Achieved yet"
+    needed_money = project.totalTarget - total_donations
 
     if project.endTime < timezone.now():
         status = "Expired"
@@ -32,6 +34,7 @@ def project_detail(request, project_id):
             'donathions': donathions,
             'total_donations': total_donations,
             'status': status,
+            'needed_money': needed_money,
           })
 
 def add_comment(request, project_id):

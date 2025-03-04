@@ -2,6 +2,8 @@
 {% load static %}
 
 {% block body %}
+
+
 <div class="container d-flex justify-content-center mt-5 mb-5">
     <div class="card shadow-lg border-0 rounded-4 overflow-hidden" style="max-width: 720px; width: 100%;">
         <div class="row g-0">
@@ -41,9 +43,9 @@
 
                     <!-- EDIT: Donation Form -->
                     {% if status == "Not Achieved yet" %}
-                    {% comment %} <div class="alert alert-danger text-center">
-                        <strong>Donation Required:</strong> ${{ project.totalTarget - total_donations }}
-                    </div> {% endcomment %}
+                  <div class="alert alert-danger text-center">
+                        <strong>Donation Required:</strong> ${{ needed_money }}
+                    </div> 
                 
                     <div>
                         <form method="POST" action="{% url 'add_donation' project.id %}">
