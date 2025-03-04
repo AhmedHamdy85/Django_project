@@ -1,4 +1,4 @@
-from django.utils import timezone  # ✅ Correct import for timezone
+from django.utils import timezone  
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import Project, Comment, User, Donation, Category
@@ -18,6 +18,7 @@ def home(request):
         projects = projects.filter(Category__id=category_filter)
 
     categories = Category.objects.all()
+    projects = projects.order_by('-id')
 
     return render(request, 'homepage/home.html', {
         'projects': projects,
@@ -25,8 +26,6 @@ def home(request):
         'categories': categories,
         'selected_category': category_filter,
     })
-    projects = projects.order_by('-id')
-    return render(request, 'homepage/home.html', {'projects': projects})
 
 
 def project_detail(request, project_id):
