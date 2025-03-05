@@ -1,5 +1,6 @@
 from django.db import models
 from taggit.managers import TaggableManager
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 
@@ -26,6 +27,7 @@ class Project (models.Model):
     totalTarget = models.IntegerField()
     startTime = models.DateTimeField(auto_now_add=True)
     endTime = models.DateTimeField()
+   
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
     tags = TaggableManager()
@@ -62,3 +64,20 @@ class Comment (models.Model):
 
     def __str__(self):
         return self.text
+
+
+
+class SelectedProject(models.Model):
+
+    project = models.OneToOneField('Project', on_delete=models.CASCADE, unique=True)
+
+    def clean(self):
+        if SelectedProject.objects.count() >= 5 and not self.pk:
+            raise ValidationError("You can only select up to 5 projects.")
+
+    def save(self, *args, **kwargs):
+        self.clean()  
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.project.titele
