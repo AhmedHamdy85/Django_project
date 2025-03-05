@@ -1,3 +1,4 @@
+from django import forms
 from django.db import models
 from taggit.managers import TaggableManager
 from django.core.exceptions import ValidationError
@@ -19,10 +20,32 @@ class User (models.Model):
         return self.firist_name
 
 
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = [single_file_clean(data, initial)]
+        return result
+
+
+class FileFieldForm(forms.Form):
+    file_field = MultipleFileField()
+
+
 class Project (models.Model):
     titele = models.CharField(max_length=100)
     description = models.TextField()
-    image = models.FileField(upload_to='static/images/', null=True, blank=True)
     Category = models.ForeignKey('Category', on_delete=models.CASCADE)
     totalTarget = models.IntegerField()
     startTime = models.DateTimeField(auto_now_add=True)
@@ -38,6 +61,10 @@ class Project (models.Model):
     def total_donations(self):
         return self.donations.aggregate(models.Sum('amount'))['amount__sum'] or 0
 
+
+class ProjectFile(models.Model):
+    project = models.ForeignKey(Project, related_name='files', on_delete=models.CASCADE)
+    file = models.FileField(upload_to='project_files/')
 
 class Donation (models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2) 
