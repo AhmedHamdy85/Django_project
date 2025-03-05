@@ -1,124 +1,121 @@
 {% extends "homepage/base.html" %}
 {% load static %}
-    {% block title %}
-        <title>Welcome to My Django Project</title>
-    {% endblock title %}
+{% block title %}
+    <title>Welcome to My Django Project</title>
+{% endblock title %}
 
-    {% block style %}
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f0f0f0;
-            }
-            h1 {
-                text-align: center;
-                margin-top: 50px;
-            }
-            p {
-                text-align: center;
-                margin-top: 20px;
-            }
-            .fixed-img {
-                height: 100%; /* Set a fixed height for all images */
-             /* Ensures images fit within the fixed height without distortion */
-                width: 100%; /* Ensures images take full width of the card */
-            }
-            .input-group {
-                margin: 20px auto;
-                max-width: 600px;
-            }
-            .form-control {
-                border-radius: 0;
-            }
-            .btn-primary {
-                border-radius: 0;
-            }
-            
-        </style>
-    {% endblock style %}
+{% block style %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
 
+        h1 {
+            text-align: center;
+            margin-top: 50px;
+        }
 
+        p {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-    {% block body %}
-        <div class="container">
-            <h1>Comparing the Top Online Fundraising and <span class="text-success">Crowdfunding</span> Platforms</h1>
-            <p class="text-muted fs-4">
+        .fixed-img {
+            height: 100%;
+            /* Set a fixed height for all images */
+            /* Ensures images fit within the fixed height without distortion */
+            width: 100%;
+            /* Ensures images take full width of the card */
+        }
 
-                Crowdfunding is a way to raise money for an individual or organization by collecting donations through family, friends, friends of friends, strangers, businesses, and more. By using social media, people can reach more potential donors than traditional forms of fundraising.
-                
-                Before you start crowdfunding, find the best platform for your needs. GoFundMe has compiled this list to help you compare the best online fundraising platform by fees, features, support, and more.
-            </p>
-            
-            {% comment %} Search {% endcomment %}
-            <form method="get" action="{% url 'home' %}" class="mb-4">
-                <div class="row">
-                    
+        .input-group {
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        .form-control, .form-select {
+            margin: 0;
+            border-radius: 0;
+        }
+        .btn-primary, .btn-secondary {
+            margin: 0;
+        }    
+    </style>
+{% endblock style %}
+
+{% block body %}
+    <div class="container">
+        <h1>Comparing the Top Online Fundraising and <span class="text-success">Crowdfunding</span> Platforms</h1>
+        <p class="text-muted fs-4">
+            Crowdfunding is a way to raise money for an individual or organization by collecting donations through family, friends, friends of friends, strangers, businesses, and more. By using social media, people can reach more potential donors than traditional forms of fundraising.
+
+            Before you start crowdfunding, find the best platform for your needs. GoFundMe has compiled this list to help you compare the best online fundraising platform by fees, features, support, and more.
+        </p>
+
+        {% comment %} Search {% endcomment %}
+        <form method="get" action="{% url 'home' %}" class="mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-5">
                     <div class="input-group">
                         <input type="text" name="q" class="form-control" placeholder="Search Projects..." value="{{ query }}">
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
-
-                    <!-- Category Seerach -->
-                    <div class="col-md-3">
-                        <select name="category" class="form-select">
-                            <option value="">All Categories</option>
-                            {% for category in categories %}
-                                <option value="{{ category.id }}" 
-                                    {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
-                                    {{ category.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="col-md-1">
-                        <button type="submit" class="btn btn-primary w-100">Filter</button>
-                    </div>
                 </div>
-            </form>
-            {% comment %} Search {% endcomment %}
-
-            
-            <div class="row row-cols-1 row-cols-md-3 g-4 mt-5 mb-5">
-                
-                {% for project in projects %}
-                <div class="col">
-                    <div class="card h-100 d-flex flex-column">
-                        <!-- Image with Fixed Height -->
-                        <div class="overflow-hidden">
-                            {% if project.image %}
-                                <img src="{{ project.image.url }}" class="card-img-top img-fluid fixed-img" alt="{{ project.title }}">
-                            {% else %}
-                                <img src="{% static 'images/git.jpg' %}" 
-                                     class="card-img-top img-fluid fixed-img" alt="Default Image">
-                            {% endif %}
-                        </div>
-                
-                        <!-- Card Body -->
-                        <div class="card-body d-flex flex-column justify-content-between">
-                            <div class="d-flex justify-content-between align-items-center my-2">
-
-                                <h5 class="card-title fw-bold text-primary">{{ project.titele }}</h5>
-                                <h5 class="card-text text-muted">{{ project.Category }}</h5>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center my-2">
-                                <span class="badge bg-success p-2">Target {{ project.totalTarget }} $</span>
-                                <span class="badge bg-danger p-2">{{ project.endTime }}</span>
-                            </div>
-                            <a href="{% url 'project_detail' project.id %}" class="btn btn-success w-100 mt-2">View Details</a>
-                        </div>
-                    </div>
-                </div>
-                
-                {% endfor %}
-                
-              </div>
-        </div>
-
-
-            
         
-    {% endblock body %}
-    
+                <div class="col-md-3">
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if category.id|stringformat:"s" == selected_category %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                <!-- Reset Button -->
+                <div class="col-md-2 d-flex p-0">
+                    <button type="submit" class="btn btn-success w-75">Filter</button>
+                    <a href="{% url 'home' %}" class="btn btn-danger w-75">Reset</a>
+                </div>
+            </div>
+        </form>
+        
+        
+        {% comment %} Search {% endcomment %}
+
+        <div class="row row-cols-1 row-cols-md-3 g-4 mt-5 mb-5">
+
+            {% comment %} Latest Projects Section {% endcomment %}
+            
+            <div class="w-100">
+                <h2 class="text-primary">Latest Projects</h2>
+            </div>
+            {% for project in latest_projects %}
+                {% include "homepage/project_card.html" with project=project %}
+            {% endfor %}
+
+            {% comment %} Selected Projects Section {% endcomment %}
+
+            {% if selected_projects %}
+                <div class="w-100">
+                    <h2 class="text-primary">Selected Projects</h2>
+                </div>
+                {% for selected_project in selected_projects %}
+                    {% include "homepage/project_card.html" with project=selected_project.project %}
+                {% endfor %}
+            {% endif %}
+
+            {% comment %} All Projects Section {% endcomment %}
+
+            <div class="w-100">
+                <h2 class="text-primary">All Projects</h2>
+            </div>
+            {% for project in projects %}
+                {% include "homepage/project_card.html" with project=project %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}
