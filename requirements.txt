@@ -1,0 +1,6 @@
+asgiref==3.8.1
+Django==5.1.6
+django-taggit==6.1.0
+networkx==3.4.2
+pillow==11.1.0
+sqlparse==0.5.3
