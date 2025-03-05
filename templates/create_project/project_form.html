@@ -5,11 +5,35 @@
     <div class="row">
         <div class="col-md-6 offset-md-3">
             <h2 class="text-center">Create a project</h2>
-            <form method="POST">
+            <form method="POST" action="{% url 'create_project' %}">
                 {% csrf_token %}
                 <div class="form-group">
-                    {{ form.as_p }}
+                    <label for="project_name">Project Name</label>
+                    <input type="text" class="form-control" id="project_name" name="project_name" required>
                 </div>
+                <div class="form-group ">
+                    <label for="project_description">Project Description</label>
+                    <textarea class="form-control" id="project_description" name="project_description" rows="3" required></textarea>
+                </div>
+                <div class="form-group ">
+                    <label for="project_deadline">Project Deadline</label>
+                    <input type="date" class="form-control" id="project_deadline" name="project_deadline" required>
+                </div>
+                <div class="form-group ">
+                    <label for="tags">Project Status</label>
+                    <select class="form-control" id="tags" name="tags" required>
+                        {% for tag in tags %}
+                            <option value="{{ tag.id }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group ">
+                    <label for="project_members">Project Members</label>
+                    <select class="form-control" id="project_members" name="project_members" required>
+                        {% for member in members %}
+                            <option value="{{ member.id }}">{{ member.username }}</option>
+                        {% endfor %}
+                    </select>
                
                 <button type="submit" class="btn btn-success">Create</button>
             </form>

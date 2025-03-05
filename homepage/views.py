@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import Project, Comment, User, Donation, Category, SelectedProject
 from django.db.models import Q
+from taggit.models import Tag
 # Create your views here.
 
 
@@ -10,7 +11,7 @@ def home(request):
     query = request.GET.get('q', '')
     category_filter = request.GET.get('category', '')
 
-    projects = Project.objects.all()
+    projects = Project.objects.prefetch_related('tags')
 
     if query:
         projects = projects.filter(titele__icontains=query)
@@ -19,6 +20,10 @@ def home(request):
 
     categories = Category.objects.all()
     projects = projects.order_by('-id')
+    projects = projects.order_by('-id')    # project 1
+    tags = Tag.objects.filter(project__in=projects).distinct()
+
+    projects = projects.order_by('-id')  # project 2
     latest_projects = projects[:3]
     selected_projects = SelectedProject.objects.select_related('project').all()
     # print(selected_projects)
@@ -28,6 +33,7 @@ def home(request):
         'query': query,
         'categories': categories,
         'selected_category': category_filter,
+        'tags': tags,
         'latest_projects': latest_projects,
         'selected_projects': selected_projects,
     })
