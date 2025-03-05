@@ -1,5 +1,5 @@
 from django.db import models
-
+from taggit.managers import TaggableManager
 # Create your models here.
 
 
@@ -27,6 +27,8 @@ class Project (models.Model):
     startTime = models.DateTimeField(auto_now_add=True)
     endTime = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    tags = TaggableManager()
 
     def __str__(self):
         return self.titele

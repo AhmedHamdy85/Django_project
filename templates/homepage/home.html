@@ -89,7 +89,7 @@
                         <!-- Image with Fixed Height -->
                         <div class="overflow-hidden">
                             {% if project.image %}
-                                <img src="{{ project.image.url }}" class="card-img-top img-fluid fixed-img" alt="{{ project.title }}">
+                                <img src="{{ project.image.url }}" class="card-img-top img-fluid fixed-img" alt="{{ project.titele }}">
                             {% else %}
                                 <img src="{% static 'images/git.jpg' %}" 
                                      class="card-img-top img-fluid fixed-img" alt="Default Image">
@@ -101,7 +101,9 @@
                             <div class="d-flex justify-content-between align-items-center my-2">
 
                                 <h5 class="card-title fw-bold text-primary">{{ project.titele }}</h5>
-                                <h5 class="card-text text-muted">{{ project.Category }}</h5>
+                                {% for tag in project.tags.all %}
+                                    <span class="badge bg-dark p-2">{{ tag.name }}</span>
+                                {% endfor %}
                             </div>
                             <div class="d-flex justify-content-between align-items-center my-2">
                                 <span class="badge bg-success p-2">Target {{ project.totalTarget }} $</span>
