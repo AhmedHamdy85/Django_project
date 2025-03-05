@@ -18,7 +18,7 @@ def home(request):
         projects = projects.filter(Category__id=category_filter)
 
     categories = Category.objects.all()
-    projects = projects.order_by('-id')
+    projects= projects.order_by('-id')
 
     return render(request, 'homepage/home.html', {
         'projects': projects,
