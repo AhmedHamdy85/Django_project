@@ -1,4 +1,5 @@
 from django.db import models
+from taggit.managers import TaggableManager
 from django.core.exceptions import ValidationError
 # Create your models here.
 
@@ -28,6 +29,8 @@ class Project (models.Model):
     endTime = models.DateTimeField()
    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
+    tags = TaggableManager()
 
     def __str__(self):
         return self.titele
