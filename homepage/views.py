@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from .models import Project, Comment, User, Donation, Category, SelectedProject
-from django.db.models import Q
+from django.db.models import Q, Count
 from taggit.models import Tag
 # Create your views here.
 
@@ -40,7 +40,7 @@ def home(request):
 
 
 def project_detail(request, project_id):
-    project = Project.objects.get(id=project_id)
+    project = get_object_or_404(Project, id=project_id)
     comments = Comment.objects.filter(project=project).order_by('-id')
     donathions = Donation.objects.filter(project=project).order_by('-id')
     total_donations = project.total_donations() or 0
@@ -54,6 +54,14 @@ def project_detail(request, project_id):
     else:
         status = "Not Achieved yet"
 
+    # Fetch similar projects based on tags
+    similar_projects = Project.objects.filter(
+        tags__in=project.tags.all()  # Match any tags from the current project
+    ).exclude(id=project.id).distinct().annotate(
+        common_tags=Count('tags')
+        # Order by the most common tags and limit to 4
+    ).order_by('-common_tags', '-id')[:4]
+
     return render(request, 'homepage/project_detail.html', {
         'project': project,
         'comments': comments,
@@ -61,6 +69,7 @@ def project_detail(request, project_id):
         'total_donations': total_donations,
         'status': status,
         'needed_money': needed_money,
+        'similar_projects': similar_projects,  # Pass similar projects to the template
     })
 
 
