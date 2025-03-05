@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from create_project.forms import ProjectForm
-from homepage.models import Project
+from homepage.models import Category, FileFieldForm, Project, ProjectFile, User
 from taggit.models import Tag
 
 
@@ -8,15 +8,34 @@ from taggit.models import Tag
 
 
 def create_project(request):
-    print("create_project view called") 
+    print("create_project view called")  
+    tags = Tag.objects.all()
+
     if request.method == 'POST':
-        tags = Tag.objects.all()
         form = ProjectForm(request.POST, request.FILES)
-        file = request.FILES.getlist('image')
+        files = request.FILES.getlist('images')
         if form.is_valid():
-            print("create_project view called with POST method and form is valid")
-            form.save()
+            project = Project.objects.create(
+                titele=form.cleaned_data['titele'],
+                description=form.cleaned_data['description'],
+                Category=Category.objects.get(id=form.cleaned_data['category']),
+                totalTarget=form.cleaned_data['totalTarget'],
+                endTime=form.cleaned_data['endTime'],
+                user = User.objects.get(id=1)
+            )
+
+            tags = form.cleaned_data['tags']
+            for tag in tags:
+                project.tags.add(tag)
+
+            for file in files:
+                ProjectFile.objects.create(project=project, file=file)
+
+            print("Project created successfully")
+            return redirect('home')  
+    
     else:
         form = ProjectForm()
-        tags = Tag.objects.all()
-    return render(request, 'create_project/project_form.html', {'form': form, 'tags': tags})
+
+    return render(request, 'create_project/project_form.html', {'form': form, 'tags': tags , 'categories': Category.objects.all()})
+

@@ -1,42 +1,57 @@
 {% extends "homepage/base.html" %}
 {% block body %}
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-6 offset-md-3">
-            <h2 class="text-center">Create a project</h2>
-            <form method="POST" action="{% url 'create_project' %}">
+            <h2 class="text-center">Create a Project</h2>
+            <form method="POST" action="{% url 'create_project' %}" enctype="multipart/form-data">
                 {% csrf_token %}
+                
                 <div class="form-group">
-                    <label for="project_name">Project Name</label>
-                    <input type="text" class="form-control" id="project_name" name="project_name" required>
+                    <label for="titele">Project Name</label>
+                    <input type="text" class="form-control" id="titele" name="titele" required>
                 </div>
-                <div class="form-group ">
-                    <label for="project_description">Project Description</label>
-                    <textarea class="form-control" id="project_description" name="project_description" rows="3" required></textarea>
+
+                <div class="form-group">
+                    <label for="description">Project Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                 </div>
-                <div class="form-group ">
-                    <label for="project_deadline">Project Deadline</label>
-                    <input type="date" class="form-control" id="project_deadline" name="project_deadline" required>
+
+                <div class="form-group">
+                    <label for="endTime">Project Deadline</label>
+                    <input type="date" class="form-control" id="endTime" name="endTime" required>
                 </div>
-                <div class="form-group ">
-                    <label for="tags">Project Status</label>
-                    <select class="form-control" id="tags" name="tags" required>
+                <div class="form-group">
+                    <label for="totalTarget">Total Target</label>
+                    <input type="number" class="form-control" id="totalTarget" name="totalTarget" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category</label>
+                    <select class="form-control" id="category" name="category" required>
+                        <option value="" disabled selected>Select a category</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <select class="form-control" id="tags" name="tags" multiple required>
                         {% for tag in tags %}
                             <option value="{{ tag.id }}">{{ tag.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="form-group ">
-                    <label for="project_members">Project Members</label>
-                    <select class="form-control" id="project_members" name="project_members" required>
-                        {% for member in members %}
-                            <option value="{{ member.id }}">{{ member.username }}</option>
-                        {% endfor %}
-                    </select>
-               
+                <div class="form-group">
+                    <label for="project_files">Upload Files</label>
+                    <input type="file" class="form-control" id="project_files" name="images" multiple>
+                </div>
+
                 <button type="submit" class="btn btn-success">Create</button>
             </form>
         </div>
     </div>
+</div>
+
 {% endblock body %}
