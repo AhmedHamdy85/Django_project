@@ -35,14 +35,13 @@
             margin: 20px auto;
             max-width: 600px;
         }
-
-        .form-control {
+        .form-control, .form-select {
+            margin: 0;
             border-radius: 0;
         }
-
-        .btn-primary {
-            border-radius: 0;
-        }
+        .btn-primary, .btn-secondary {
+            margin: 0;
+        }    
     </style>
 {% endblock style %}
 
@@ -57,13 +56,14 @@
 
         {% comment %} Search {% endcomment %}
         <form method="get" action="{% url 'home' %}" class="mb-4">
-            <div class="row">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Search Projects..." value="{{ query }}">
-                    <button type="submit" class="btn btn-primary">Search</button>
+            <div class="row align-items-center">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" placeholder="Search Projects..." value="{{ query }}">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
                 </div>
-
-                <!-- Category Search -->
+        
                 <div class="col-md-3">
                     <select name="category" class="form-select">
                         <option value="">All Categories</option>
@@ -74,12 +74,16 @@
                         {% endfor %}
                     </select>
                 </div>
-
-                <div class="col-md-1">
-                    <button type="submit" class="btn btn-primary w-100">Filter</button>
+        
+                <!-- Reset Button -->
+                <div class="col-md-2 d-flex p-0">
+                    <button type="submit" class="btn btn-success w-75">Filter</button>
+                    <a href="{% url 'home' %}" class="btn btn-danger w-75">Reset</a>
                 </div>
             </div>
         </form>
+        
+        
         {% comment %} Search {% endcomment %}
 
         <div class="row row-cols-1 row-cols-md-3 g-4 mt-5 mb-5">

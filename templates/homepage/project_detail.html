@@ -1,7 +1,56 @@
 {% extends "homepage/base.html" %}
 {% load static %}
 
+
 {% block body %}
+
+<div class="mt-5">
+    <h3 class="text-center mb-4 text-success">Similar Projects</h3>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% for similar_project in similar_projects %}
+            <div class="col">
+                <div class="card h-100 d-flex flex-column">
+                    <!-- Image with Fixed Height -->
+                    <div class="overflow-hidden">
+                        {% if similar_project.image %}
+                            <img src="{{ similar_project.image.url }}" class="card-img-top img-fluid fixed-img" alt="{{ similar_project.titele }}">
+                        {% else %}
+                            <img src="{% static 'images/git.jpg' %}" class="card-img-top img-fluid fixed-img" alt="Default Image">
+                        {% endif %}
+                    </div>
+
+                    <!-- Card Body -->
+                    <div class="card-body d-flex flex-column justify-content-between" style="min-height: 200px;">
+                        <!-- Tags -->
+                        <div>
+                            {% for tag in similar_project.tags.all %}
+                                <span class="badge bg-primary p-2">{{ tag.name }}</span>
+                            {% empty %}
+                                <span class="badge bg-primary p-2">No Tags</span>
+                            {% endfor %}
+                        </div>
+
+                        <!-- Project Title and Category -->
+                        <h5 class="card-title fw-bold text-primary mt-3">{{ similar_project.titele }}</h5>
+                        <p class="text-muted">{{ similar_project.Category }}</p>
+
+                        <!-- Additional Info -->
+                        <div class="d-flex justify-content-between align-items-center my-2">
+                            <span class="badge bg-success p-2">Target: {{ similar_project.totalTarget }} $</span>
+                            <span class="badge bg-danger p-2">{{ similar_project.endTime|date:"d M Y" }}</span>
+                        </div>
+
+                        <!-- View Details Button -->
+                        <a href="{% url 'project_detail' similar_project.id %}" class="btn btn-success w-100 mt-2">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center text-muted">No similar projects found.</p>
+        {% endfor %}
+    </div>
+</div>
+
 
 
 <div class="container d-flex justify-content-center mt-5 mb-5">
