@@ -50,6 +50,12 @@ class Project (models.Model):
     totalTarget = models.IntegerField()
     startTime = models.DateTimeField(auto_now_add=True)
     endTime = models.DateTimeField()
+    ratings = models.JSONField(default=list) 
+
+    def average_rating(self):
+        if self.ratings:
+            return sum(self.ratings) / len(self.ratings)
+        return 0 
    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     
