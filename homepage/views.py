@@ -1,9 +1,10 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .models import Project, Comment, User, Donation, Category, SelectedProject
+from .models import Project, Comment, Report, User, Donation, Category, SelectedProject
 from django.db.models import Q, Count
 from taggit.models import Tag
+from django.contrib import messages
 # Create your views here.
 
 
@@ -20,10 +21,8 @@ def home(request):
 
     categories = Category.objects.all()
     projects = projects.order_by('-id')
-    projects = projects.order_by('-id')    # project 1
     tags = Tag.objects.filter(project__in=projects).distinct()
 
-    projects = projects.order_by('-id')  # project 2
     latest_projects = projects[:3]
     selected_projects = SelectedProject.objects.select_related('project').all()
     # print(selected_projects)
@@ -41,7 +40,7 @@ def home(request):
 
 def project_detail(request, project_id):
     project = get_object_or_404(Project, id=project_id)
-    comments = Comment.objects.filter(project=project).order_by('-id')
+    comments = Comment.objects.filter(project=project, parent=None).order_by('-id')
     donathions = Donation.objects.filter(project=project).order_by('-id')
     total_donations = project.total_donations() or 0
     status = "Not Achieved yet"
@@ -75,6 +74,7 @@ def project_detail(request, project_id):
         'needed_money': needed_money,
         'delete_allowed': delete_allowed,
         'average_rating': round(average_rating, 1),
+        'similar_projects': similar_projects
     })
 
 def add_rating(request, project_id):
@@ -113,3 +113,50 @@ def add_donation(request, project_id):
                 user_id=request.user.id, project=project, amount=int(amount))
 
     return redirect(reverse('project_detail', args=[project_id]))
+
+
+def report_project(request,project_id):
+    user = User.objects.get(id=request.user.id) 
+    project= get_object_or_404(Project, id=project_id)
+
+    if request.method == 'POST':
+        reason = request.POST.get("reason", "")
+        description = request.POST.get('description', '')
+
+        Report.objects.create(user=user, project=project, reason=reason, description=description)
+        messages.success(request, "Project reported successfully.")
+        
+    return redirect('project_detail', project_id=project_id)
+
+
+def report_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    user = User.objects.get(id=request.user.id) 
+
+    if request.method == 'POST':
+        reason = request.POST.get('reason')
+        description = request.POST.get('description', '')
+
+        Report.objects.create(user=user, comment=comment, reason=reason, description=description)
+        messages.success(request, "Comment reported successfully.")
+
+    return redirect('project_detail', project_id=comment.project.id)
+
+
+def add_reply(request, comment_id):
+
+    if request.method == 'POST':
+        user = User.objects.get(id=request.user.id) 
+        parent_comment = get_object_or_404(Comment, id=comment_id)
+        text = request.POST.get('reply', '').strip()
+        if text:
+            Comment.objects.create(
+                user=user,
+                project=parent_comment.project,
+                text=text, 
+                parent=parent_comment)
+
+    return redirect('project_detail', project_id=parent_comment.project.id)
+    
+ 
+
