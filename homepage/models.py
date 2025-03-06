@@ -93,6 +93,7 @@ class Comment (models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     text = models.TextField()
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
     time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -114,3 +115,25 @@ class SelectedProject(models.Model):
 
     def __str__(self):
         return self.project.titele
+
+
+class Report(models.Model):
+    REPORT_CHOICES = [
+        ('spam', 'Spam'),
+        ('offensive', 'Offensive Content'),
+        ('other', 'Other'),
+    ]
+     
+    user = models.ForeignKey(User, on_delete=models.CASCADE) 
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, null=True, blank=True)
+    comment = models.ForeignKey('Comment', on_delete=models.CASCADE, null=True, blank=True)
+    reason = models.CharField(max_length=50, choices=REPORT_CHOICES)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        if self.project:
+            return f"Report on Project: {self.project.titele} by {self.user.firist_name}"
+        elif self.comment:
+            return f"Report on Comment by {self.user.firist_name}"
+        return "Report"
