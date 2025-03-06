@@ -16,7 +16,7 @@
                 <img src="{{ project.image.url }}" class="img-fluid rounded-start h-100" alt="{{ project.title }}">
                 {% else %}
                 <!-- EDIT: Default image if project.image is NULL -->
-                <img src="https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=" 
+                <img src="{% static 'images/freelancia-logo_cELoRXJ.png' %}" 
                      class="img-fluid rounded-start h-100" alt="Default Image">
                 {% endif %}
             </div>

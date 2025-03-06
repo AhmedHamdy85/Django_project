@@ -2,13 +2,34 @@
 
 <div class="col">
     <div class="card h-100 d-flex flex-column">
-        <!-- Image with Fixed Height -->
-        <div class="overflow-hidden">
-            {% if project.image %}
-                <img src="{{ project.image.url }}" class="card-img-top img-fluid fixed-img" alt="{{ project.titele }}">
-            {% else %}
-                <img src="{% static 'images/git.jpg' %}" class="card-img-top img-fluid fixed-img" alt="Default Image">
-            {% endif %}
+        <!-- Bootstrap Carousel for Project Images -->
+        <div id="carousel{{ project.id }}" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% with project.files.all as project_images %}
+                    {% if project_images %}
+                        {% for file in project_images %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img src="{{ file.file.url }}" class="card-img-top img-fluid fixed-img" alt="Project Image">
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <!-- Default Image -->
+                        <div class="carousel-item active">
+                            <img src="{% static 'images/git.jpg' %}" class="card-img-top img-fluid fixed-img" alt="Default Image">
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <!-- Carousel Controls -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel{{ project.id }}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel{{ project.id }}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
 
         <!-- Card Body -->

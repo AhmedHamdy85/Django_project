@@ -1,7 +1,7 @@
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from .models import Project, Comment, Report, User, Donation, Category, SelectedProject
+from .models import Project, Comment, Report, User, Donation, Category, SelectedProject,ProjectFile
 from django.db.models import Q, Count
 from taggit.models import Tag
 from django.contrib import messages
@@ -12,7 +12,7 @@ def home(request):
     query = request.GET.get('q', '')
     category_filter = request.GET.get('category', '')
 
-    projects = Project.objects.prefetch_related('tags')
+    projects = Project.objects.prefetch_related('tags', 'files') 
 
     if query:
         projects = projects.filter(titele__icontains=query)
@@ -25,6 +25,7 @@ def home(request):
 
     latest_projects = projects[:3]
     selected_projects = SelectedProject.objects.select_related('project').all()
+    # projects_files = ProjectFile.objects.filter(project__in=projects)
     # print(selected_projects)
 
     return render(request, 'homepage/home.html', {
@@ -35,6 +36,7 @@ def home(request):
         'tags': tags,
         'latest_projects': latest_projects,
         'selected_projects': selected_projects,
+        
     })
 
 
@@ -124,7 +126,7 @@ def report_project(request,project_id):
         description = request.POST.get('description', '')
 
         Report.objects.create(user=user, project=project, reason=reason, description=description)
-        messages.success(request, "Project reported successfully.")
+        messages.success(request, f"Project {project.titele} reported by {user.firist_name}.")
         
     return redirect('project_detail', project_id=project_id)
 
@@ -138,7 +140,8 @@ def report_comment(request, comment_id):
         description = request.POST.get('description', '')
 
         Report.objects.create(user=user, comment=comment, reason=reason, description=description)
-        messages.success(request, "Comment reported successfully.")
+        messages.success(request, f"Comment ({comment.text}) created by ({comment.user.firist_name}) reported by {user.firist_name}.")
+
 
     return redirect('project_detail', project_id=comment.project.id)
 
