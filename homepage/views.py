@@ -46,6 +46,7 @@ def project_detail(request, project_id):
     total_donations = project.total_donations() or 0
     status = "Not Achieved yet"
     needed_money = project.totalTarget - total_donations
+    average_rating = project.average_rating()
 
     if project.endTime < timezone.now():
         status = "Expired"
@@ -53,6 +54,9 @@ def project_detail(request, project_id):
         status = "Goal Achieved"
     else:
         status = "Not Achieved yet"
+    
+    delete_allowed = total_donations < (project.totalTarget * 0.25)
+
 
     # Fetch similar projects based on tags
     similar_projects = Project.objects.filter(
@@ -69,9 +73,23 @@ def project_detail(request, project_id):
         'total_donations': total_donations,
         'status': status,
         'needed_money': needed_money,
-        'similar_projects': similar_projects,  # Pass similar projects to the template
+        'delete_allowed': delete_allowed,
+        'average_rating': round(average_rating, 1),
     })
 
+def add_rating(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+
+        if rating and rating.isdigit():
+            rating = int(rating)
+            if 1 <= rating <= 5:
+                project.ratings.append(rating)  
+                project.save(update_fields=['ratings']) 
+
+    return redirect('project_detail', project_id=project_id)
 
 def add_comment(request, project_id):
     project = get_object_or_404(Project, id=project_id)

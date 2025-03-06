@@ -72,12 +72,47 @@
                 <div class="card-body d-flex flex-column justify-content-between h-100">
                     <div>
                         <h4 class="card-title fw-bold text-primary">{{ project.titele }}</h4>
+                        {% if delete_allowed %}
                         <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
                             &times;
                         </button>
+                        {% endif %}
                         <p class="card-text text-muted"><strong>Category:</strong> {{ project.Category }}</p>
                         <p class="card-text"><strong>Description:</strong> {{ project.description }}</p>
                         <p class="card-text"><strong>Status:</strong> {{ status }}</p>
+
+                        <div class="d-flex align-items-center my-2">
+                            <strong class="me-2">Average Rating:</strong>
+                            <span class="text-warning">
+                                {% for i in "12345"|make_list %}
+                                    {% if forloop.counter <= project.average_rating %}
+                                        <i class="fas fa-star"></i> 
+                                    {% elif forloop.counter|add:"-0.5" == project.average_rating %}
+                                        <i class="fas fa-star-half-alt"></i> 
+                                    {% else %}
+                                        <i class="far fa-star"></i> 
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                            <span class="ms-2">({{ project.average_rating|floatformat:1 }})</span>
+                        </div>
+
+                        <form method="POST" action="{% url 'add_rating' project.id %}" class="mt-2">
+                            {% csrf_token %}
+                            <div class="d-flex align-items-center">
+                                <strong class="me-2">Rate this project:</strong>
+                                <select name="rating" class="form-select form-select-sm w-auto me-2">
+                                    <option value="1"><i class="fa-solid fa-star"></i> 1</option>
+                                    <option value="2"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> 2</option>
+                                    <option value="3"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> 3</option>
+                                    <option value="4"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> 4</option>
+                                    <option value="5"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> 5</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fa-solid fa-paper-plane"></i> Submit
+                                </button>
+                            </div>
+                        </form>
 
                         <div class="d-flex justify-content-between align-items-center my-3">
                             <span class="badge bg-success p-2">Target: {{ project.totalTarget }}</span>
